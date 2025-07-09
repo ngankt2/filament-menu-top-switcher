@@ -1,6 +1,6 @@
 <?php
 
-namespace JaysonTemporas\PageBookmarks;
+namespace Ngankt2\FilamentMenuTopSwitcher;
 
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;

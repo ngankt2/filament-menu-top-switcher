@@ -1,6 +1,6 @@
 <?php
 
-namespace JaysonTemporas\PageBookmarks;
+namespace Ngankt2\FilamentMenuTopSwitcher;
 
 use Filament\Contracts\Plugin;
 use Filament\Navigation\MenuItem;
