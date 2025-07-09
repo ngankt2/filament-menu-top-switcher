@@ -19,14 +19,14 @@ class FilamentMenuTopSwitcherPlugin implements Plugin
             ->userMenuItems([
                 MenuItem::make()
                     ->label(
-                        (bool)request()->cookie('topNavigation')
-                            ? 'Sử dụng menu dọc'
-                            : 'Sử dụng menu ngang'
+                        (bool) request()->cookie('topNavigation')
+                            ? __('filament-menu-top-switcher::menu.use_sidebar')
+                            : __('filament-menu-top-switcher::menu.use_topnav')
                     )
-                    ->url(route('filament-menu-top-switcher'))
-                    ->icon('heroicon-o-arrow-path'),
-
-
+                    ->url(fn(): string => route('filament-menu-top-switcher'))
+                    ->icon(fn(): string => (bool) request()->cookie('topNavigation')
+                        ? 'heroicon-s-bars-3-bottom-left'
+                        : 'heroicon-c-bars-arrow-up'),
             ])
             ->topNavigation((bool)request()->cookie('topNavigation'));
 

@@ -16,12 +16,15 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
     {
         $package
             ->name(static::$name)
-            ->hasViews('filament-menu-top-switcher')
+            ->hasTranslations()
             ->hasRoute('web');
     }
 
     public function packageBooted(): void
     {
-
+        $this->publishes([
+            __DIR__.'/../lang' => base_path('lang/vendor/filament-menu-top-switcher'),
+        ], 'filament-menu-top-switcher-translations');
     }
+
 }
