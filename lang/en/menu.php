@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'use_sidebar' => 'Use sidebar menu',
-    'use_topnav' => 'Use top navigation',
+    'change_menu' => 'Change menu position',
+
 ];

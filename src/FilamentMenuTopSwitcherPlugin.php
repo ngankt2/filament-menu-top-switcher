@@ -18,15 +18,9 @@ class FilamentMenuTopSwitcherPlugin implements Plugin
         $panel
             ->userMenuItems([
                 MenuItem::make()
-                    ->label(
-                        (bool) request()->cookie('topNavigation')
-                            ? __('filament-menu-top-switcher::menu.use_sidebar')
-                            : __('filament-menu-top-switcher::menu.use_topnav')
-                    )
+                    ->label(fn()=>__('filament-menu-top-switcher::menu.change_menu'))
                     ->url(fn(): string => route('filament-menu-top-switcher'))
-                    ->icon(fn(): string => (bool) request()->cookie('topNavigation')
-                        ? 'heroicon-s-bars-3-bottom-left'
-                        : 'heroicon-c-bars-arrow-up'),
+                    ->icon('heroicon-c-bars-arrow-up'),
             ])
             ->topNavigation((bool)request()->cookie('topNavigation'));
 

@@ -22,6 +22,8 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'filament-menu-top-switcher');
+
         $this->publishes([
             __DIR__.'/../lang' => base_path('lang/vendor/filament-menu-top-switcher'),
         ], 'filament-menu-top-switcher-translations');
