@@ -1,0 +1,41 @@
+{
+  "name": "ngankt2/filament-menu-top-switcher",
+  "description": "A simple FilamentPHP plugin that allows switching between Top Navigation and Sidebar layouts dynamically — perfect for customizing the look and feel of your admin panel based on user preferences",
+  "type": "library",
+  "keywords": [
+    "FilamentPHP",
+    "filament",
+    "laravel",
+    "laravel",
+    "menu top switcher",
+    "menu switcher",
+    "topNavigation"
+  ],
+  "homepage": "https://github.com/ngankt2/filament-menu-top-switcher",
+  "autoload": {
+    "psr-4": {
+      "Ngankt2\\FilamentMenuTopSwitcher\\": "src"
+    }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ngannv",
+      "email": "ngankt2@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.1|^8.2|^8.3",
+    "filament/filament": "^3.0",
+    "spatie/laravel-package-tools": "^1.15.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Ngankt2\\FilamentMenuTopSwitcher\\FilamentMenuTopSwitcherProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
