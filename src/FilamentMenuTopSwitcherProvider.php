@@ -32,6 +32,7 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
             fn () => new HtmlString("
         <script>
             let sidebarScrollTop = 0;
+            let _firstRender = true;
 
             function getSidebar() {
                 return document.querySelector('.fi-sidebar-nav');
@@ -47,6 +48,10 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
             });
 
             document.addEventListener('livewire:navigated', () => {
+                if(_firstRender){
+                    _firstRender = false;
+                    return;
+                }
                 const tryRestoreScroll = () => {
                     const sidebar = getSidebar();
                     if (sidebar && sidebar.scrollTop !== sidebarScrollTop) {
