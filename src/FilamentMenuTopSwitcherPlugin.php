@@ -25,6 +25,10 @@ class FilamentMenuTopSwitcherPlugin implements Plugin
             ->topNavigation((bool)request()->cookie('topNavigation'));
 
     }
+    public static function isTopBarMenu(): bool
+    {
+        return request()->cookie('topNavigation') || session('topNavigation', false);
+    }
 
     public function boot(Panel $panel): void
     {
