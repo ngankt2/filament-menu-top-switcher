@@ -31,8 +31,8 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
             'panels::scripts.before',
             fn () => new HtmlString("
         <script>
-            let sidebarScrollTop = 0;
-            let _firstRender = true;
+            var sidebarScrollTop = 0;
+            var _firstRender = true;
 
             function getSidebar() {
                 return document.querySelector('.fi-sidebar-nav');
