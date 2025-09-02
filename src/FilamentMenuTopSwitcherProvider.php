@@ -31,37 +31,44 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
             'panels::scripts.before',
             fn () => new HtmlString("
         <script>
-            var sidebarScrollTop = 0;
-            var _firstRender = true;
 
-            function getSidebar() {
-                return document.querySelector('.fi-sidebar-nav');
+            try{
+                let _sidebarScrollTop = 0;
+
+                let _firstRender = true;
+
+                function getSidebar() {
+                    return document.querySelector('.fi-sidebar-nav');
+                }
+
+                document.addEventListener('click', (e) => {
+                    const item = e.target.closest('.fi-sidebar-item');
+                    const sidebar = getSidebar();
+
+                    if (item && sidebar) {
+                        _sidebarScrollTop = sidebar.scrollTop;
+                    }
+                });
+
+                document.addEventListener('livewire:navigated', () => {
+                    if(_firstRender){
+                        _firstRender = false;
+                        return;
+                    }
+                    const tryRestoreScroll = () => {
+                        const sidebar = getSidebar();
+                        if (sidebar && sidebar.scrollTop !== _sidebarScrollTop) {
+                            sidebar.scrollTo({ top: _sidebarScrollTop, behavior: 'auto' });
+                            requestAnimationFrame(tryRestoreScroll);
+                        }
+                    };
+
+                    requestAnimationFrame(tryRestoreScroll);
+                });
+            }catch (e) {
+
             }
 
-            document.addEventListener('click', (e) => {
-                const item = e.target.closest('.fi-sidebar-item');
-                const sidebar = getSidebar();
-
-                if (item && sidebar) {
-                    sidebarScrollTop = sidebar.scrollTop;
-                }
-            });
-
-            document.addEventListener('livewire:navigated', () => {
-                if(_firstRender){
-                    _firstRender = false;
-                    return;
-                }
-                const tryRestoreScroll = () => {
-                    const sidebar = getSidebar();
-                    if (sidebar && sidebar.scrollTop !== sidebarScrollTop) {
-                        sidebar.scrollTo({ top: sidebarScrollTop, behavior: 'auto' });
-                        requestAnimationFrame(tryRestoreScroll);
-                    }
-                };
-
-                requestAnimationFrame(tryRestoreScroll);
-            });
         </script>
     ")
         );
