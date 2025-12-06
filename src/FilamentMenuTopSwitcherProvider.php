@@ -31,45 +31,73 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
             'panels::scripts.before',
             fn () => new HtmlString("
         <script>
+try {
+    let _sidebarScrollTop = 0;
+    let _firstRender = true;
+    let _isRestoring = false;
 
-            try{
-                let _sidebarScrollTop = 0;
+    function getSidebar() {
+        return document.querySelector('.fi-sidebar-nav');
+    }
 
-                let _firstRender = true;
+    document.addEventListener('click', (e) => {
+        const item = e.target.closest('.fi-sidebar-item');
+        const sidebar = getSidebar();
 
-                function getSidebar() {
-                    return document.querySelector('.fi-sidebar-nav');
-                }
+        if (item && sidebar) {
+            _sidebarScrollTop = sidebar.scrollTop;
+        }
+    });
 
-                document.addEventListener('click', (e) => {
-                    const item = e.target.closest('.fi-sidebar-item');
-                    const sidebar = getSidebar();
+    // Cho phép scroll thủ công - hủy restore khi user scroll
+    document.addEventListener('wheel', () => {
+        _isRestoring = false;
+    }, { passive: true });
 
-                    if (item && sidebar) {
-                        _sidebarScrollTop = sidebar.scrollTop;
-                    }
-                });
+    document.addEventListener('touchmove', () => {
+        _isRestoring = false;
+    }, { passive: true });
 
-                document.addEventListener('livewire:navigated', () => {
-                    if(_firstRender){
-                        _firstRender = false;
-                        return;
-                    }
-                    const tryRestoreScroll = () => {
-                        const sidebar = getSidebar();
-                        if (sidebar && sidebar.scrollTop !== _sidebarScrollTop) {
-                            sidebar.scrollTo({ top: _sidebarScrollTop, behavior: 'auto' });
-                            requestAnimationFrame(tryRestoreScroll);
-                        }
-                    };
+    document.addEventListener('livewire:navigated', () => {
+        if (_firstRender) {
+            _firstRender = false;
+            return;
+        }
 
-                    requestAnimationFrame(tryRestoreScroll);
-                });
-            }catch (e) {
+        _isRestoring = true;
+        let retryCount = 0;
+        const maxRetries = 10; // Tối đa 10 lần thử (~160ms)
 
+        const tryRestoreScroll = () => {
+            // Dừng nếu user đã scroll hoặc quá số lần thử
+            if (!_isRestoring || retryCount >= maxRetries) {
+                _isRestoring = false;
+                return;
             }
 
-        </script>
+            const sidebar = getSidebar();
+            if (sidebar) {
+                // Kiểm tra đã restore thành công chưa (cho phép sai số 2px)
+                if (Math.abs(sidebar.scrollTop - _sidebarScrollTop) <= 2) {
+                    _isRestoring = false;
+                    return;
+                }
+                
+                sidebar.scrollTo({ top: _sidebarScrollTop, behavior: 'auto' });
+                retryCount++;
+                requestAnimationFrame(tryRestoreScroll);
+            } else {
+                retryCount++;
+                requestAnimationFrame(tryRestoreScroll);
+            }
+        };
+
+        requestAnimationFrame(tryRestoreScroll);
+    });
+} catch (e) {
+    console.warn('Sidebar scroll restore error:', e);
+}
+</script>
     ")
         );
     }
