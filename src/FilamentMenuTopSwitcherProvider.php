@@ -40,13 +40,33 @@ try {
         return document.querySelector('.fi-sidebar-nav');
     }
 
-    document.addEventListener('click', (e) => {
-        const item = e.target.closest('.fi-sidebar-item');
+    // Lưu vị trí cuộn sidebar
+    function saveSidebarScrollPosition() {
         const sidebar = getSidebar();
-
-        if (item && sidebar) {
+        if (sidebar) {
             _sidebarScrollTop = sidebar.scrollTop;
         }
+    }
+
+    // Lưu khi click vào sidebar item (như cũ)
+    document.addEventListener('click', (e) => {
+        const item = e.target.closest('.fi-sidebar-item');
+        if (item) {
+            saveSidebarScrollPosition();
+            return;
+        }
+
+        // Lưu khi click vào các link điều hướng trong nội dung chính
+        // Bao gồm: table actions, breadcrumb, form buttons, etc.
+        const navLink = e.target.closest('a[href]:not([href=\"#\"]):not([href^=\"javascript:\"]):not([target=\"_blank\"])');
+        if (navLink && !navLink.hasAttribute('wire:navigate.prevent')) {
+            saveSidebarScrollPosition();
+        }
+    });
+
+    // Lưu vị trí khi Livewire bắt đầu điều hướng (cách tốt nhất)
+    document.addEventListener('livewire:navigate', () => {
+        saveSidebarScrollPosition();
     });
 
     // Cho phép scroll thủ công - hủy restore khi user scroll
