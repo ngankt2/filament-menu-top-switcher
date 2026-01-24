@@ -27,6 +27,37 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
             __DIR__.'/../lang' => base_path('lang/vendor/filament-menu-top-switcher'),
         ], 'filament-menu-top-switcher-translations');
 
+        // Custom CSS for sidebar scrollbar
+        Filament::registerRenderHook(
+            'panels::head.end',
+            fn () => new HtmlString("
+<style>
+.fi-sidebar {
+    ::-webkit-scrollbar {
+        height: 9px;
+        width: 5px;
+        border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: transparent;
+    }
+}
+</style>
+    ")
+        );
+
+        // JavaScript for sidebar scroll position restore
         Filament::registerRenderHook(
             'panels::scripts.before',
             fn () => new HtmlString("
