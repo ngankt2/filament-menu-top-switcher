@@ -22,12 +22,19 @@ class FilamentMenuTopSwitcherPlugin implements Plugin
                     ->url(fn(): string => route('filament-menu-top-switcher'))
                     ->icon('heroicon-c-bars-arrow-up'),
             ])
-            ->topNavigation((bool)request()->cookie('topNavigation'));
+            ->topNavigation(fn() => self::isTopBarMenu());
 
     }
     public static function isTopBarMenu(): bool
     {
-        return request()->cookie('topNavigation') || session('topNavigation', false);
+        $sessionVal = session('topNavigation');
+        $cookieVal = request()->cookie('topNavigation');
+
+        if ($sessionVal !== null) {
+            return (bool)$sessionVal;
+        }
+
+        return $cookieVal == '1';
     }
 
     public function boot(Panel $panel): void

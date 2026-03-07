@@ -27,37 +27,6 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
             __DIR__.'/../lang' => base_path('lang/vendor/filament-menu-top-switcher'),
         ], 'filament-menu-top-switcher-translations');
 
-        // Custom CSS for sidebar scrollbar
-        Filament::registerRenderHook(
-            'panels::head.end',
-            fn () => new HtmlString("
-<style>
-.fi-sidebar {
-    ::-webkit-scrollbar {
-        height: 9px;
-        width: 5px;
-        border-radius: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: transparent;
-        border-radius: 8px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: transparent;
-        border-radius: 8px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: transparent;
-    }
-}
-</style>
-    ")
-        );
-
-        // JavaScript for sidebar scroll position restore
         Filament::registerRenderHook(
             'panels::scripts.before',
             fn () => new HtmlString("
@@ -70,6 +39,16 @@ try {
     function getSidebar() {
         return document.querySelector('.fi-sidebar-nav');
     }
+
+    // Intercept click on the toggle navigation menu item to force a hard reload
+    document.addEventListener('click', (e) => {
+        const toggleLink = e.target.closest('a[href*=\"/pref/toggle-navigation\"]');
+        if (toggleLink) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.href = toggleLink.href;
+        }
+    }, true); // use capturing phase to intercept before Livewire
 
     // Lưu vị trí cuộn sidebar
     function saveSidebarScrollPosition() {

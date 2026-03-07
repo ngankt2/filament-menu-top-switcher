@@ -1,18 +1,22 @@
 <?php
 
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Cookie;
-
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/pref/toggle-navigation', function () {
-    $hasCookie = request()->hasCookie('topNavigation');
-    if ($hasCookie) {
-        session('topNavigation', false);
-        return Redirect::back()->withCookie(Cookie::forget('topNavigation'));
-    }
-    session('topNavigation', true);
-    return Redirect::back()->withCookie(
-        cookie('topNavigation', '1', 60 * 24 * 30)
-    );
-})->name('filament-menu-top-switcher');
+Route::middleware('web')->group(function () {
+    Route::get('/pref/toggle-navigation', function () {
+        // Evaluate current state (true if top menu is ON)
+        $isTopMenu = session('topNavigation', request()->cookie('topNavigation') == '1');
+
+        // Toggle the value
+        $newState = !$isTopMenu;
+
+        // Update both Session and Cookie
+        session(['topNavigation' => $newState]);
+
+        return Redirect::back()->withCookie(
+            cookie('topNavigation', $newState ? '1' : '0', 60 * 24 * 30) // valid for 30 days
+        );
+    })->name('filament-menu-top-switcher');
+});
