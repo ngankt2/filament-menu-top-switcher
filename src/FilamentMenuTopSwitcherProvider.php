@@ -28,6 +28,98 @@ class FilamentMenuTopSwitcherProvider extends PackageServiceProvider
         ], 'filament-menu-top-switcher-translations');
 
         Filament::registerRenderHook(
+            'panels::styles.after',
+            fn () => new HtmlString('
+                <style>
+                    .fi-sidebar {
+                        ::-webkit-scrollbar {
+                            height: 9px;
+                            width: 5px;
+                            border-radius: 8px;
+                        }
+
+                        ::-webkit-scrollbar-track {
+                            background: transparent;
+                            border-radius: 8px;
+                        }
+
+                        ::-webkit-scrollbar-thumb {
+                            background: transparent;
+                            border-radius: 8px;
+                        }
+
+                        ::-webkit-scrollbar-thumb:hover {
+                            background: transparent;
+                        }
+                    }
+
+                    .fi-tenant-menu-trigger-tenant-name {
+                        white-space: nowrap;
+                        max-width: 100%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    .fi-page-sub-navigation-sidebar-ctn {
+                        width: calc(var(--spacing) * 58);
+                    }
+
+
+                    .fi-sidebar-nav {
+                        overflow-y: auto;
+                        /* vẫn cuộn được */
+                        scrollbar-width: none;
+                        /* Firefox */
+                        -ms-overflow-style: none;
+                        /* IE/Edge cũ */
+                    }
+
+                    .fi-sidebar-nav::-webkit-scrollbar {
+                        display: none;
+                        /* Chrome, Safari */
+                    }
+
+                    * {
+                        scrollbar-width: thin;
+                        scrollbar-color: var(--app-scrollbar-thumb) var(--app-scrollbar-track);
+                    }
+
+                    ::-webkit-scrollbar {
+                        height: var(--app-scrollbar-size);
+                        width: var(--app-scrollbar-size);
+                    }
+
+                    ::-webkit-scrollbar-track {
+                        background: var(--app-scrollbar-track);
+                        border-radius: var(--app-scrollbar-radius);
+                    }
+
+                    ::-webkit-scrollbar-thumb {
+                        background: var(--app-scrollbar-thumb);
+                        border: 3px solid transparent;
+                        border-radius: var(--app-scrollbar-radius);
+                        background-clip: content-box;
+                        min-height: 40px;
+                    }
+
+                    ::-webkit-scrollbar-thumb:hover {
+                        background: var(--app-scrollbar-thumb-hover);
+                        background-clip: content-box;
+                    }
+
+                    ::-webkit-scrollbar-thumb:active {
+                        background: var(--app-scrollbar-thumb-active);
+                        background-clip: content-box;
+                    }
+
+                    ::-webkit-scrollbar-corner {
+                        background: transparent;
+                    }
+                </style>
+            ')
+        );
+
+        Filament::registerRenderHook(
             'panels::scripts.before',
             fn () => new HtmlString("
         <script>
